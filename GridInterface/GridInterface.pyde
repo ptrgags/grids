@@ -1,15 +1,47 @@
-#from basic import Cell, Grid
-#from bots import Bot, AutoBot
+from basic import Cell, Grid
+from bots import Bot, AutoBot
 from example1 import Example1
+from example2 import Example2
+
+#Keep track of the Ctrl key.
+#Ctrl + Left/Right switches between sketches
+control_pressed = False
+
+MODES = [Example1, Example2]
+mode_index = 0
+
 
 def setup():
-    global ex1
+    global mode, mode_index
     size(640, 640)
-    ex1 = Example1()
+    init_mode()
 
 def draw():
-    ex1.update()
-    ex1.draw()
+    mode.update()
+    mode.draw()
+    
 
+def keyPressed():
+    global control_pressed
+    if key == CODED and keyCode == CONTROL:
+        control_pressed = True
+    else:
+        mode.keyPressed()
+        
 def keyReleased():
-    ex1.keyReleased()
+    global control_pressed, mode, mode_index
+    if key == CODED and keyCode == CONTROL:
+        control_pressed = False
+    elif key == CODED and keyCode == LEFT and control_pressed:
+        mode_index = (mode_index - 1) % len(MODES)
+        init_mode()
+    elif key == CODED and keyCode == RIGHT and control_pressed:
+        mode_index = (mode_index + 1) % len(MODES)
+        init_mode()
+    else:
+        mode.keyReleased()
+
+def init_mode():
+    global mode
+    mode = MODES[mode_index]()
+    frame.setTitle(str(mode))

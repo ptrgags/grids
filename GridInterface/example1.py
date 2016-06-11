@@ -66,3 +66,6 @@ class Example1(SketchMode):
                 self.bot2.move_dir(self.WASD_MAP[key])
             except ValueError as e:
                 print e
+        
+    def __str__(self):
+        return "Example 1: Basic Entities"

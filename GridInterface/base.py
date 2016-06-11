@@ -26,6 +26,13 @@ class CellBase(object):
         """
         raise NotImplementedError
     
+    def get_direction_toward(self, other):
+        """
+        Get a direction to travel to
+        get to the other cell specified
+        """
+        raise NotImplementedError
+    
     #TODO: Get direction toward cell?
     #TODO: Compare cells?
 
@@ -95,7 +102,7 @@ class GridBase(object):
         Get all valid adjacent cells
         """
         adjacent_cells = cell.get_all_adjacent()
-        return [cell for cell in adjacent_cells if self.is_valid(cel)]
+        return [cell for cell in adjacent_cells if self.is_valid(cell)]
   
     def empty_adjacent_cells(self, cell):
         """

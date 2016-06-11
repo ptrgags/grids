@@ -27,6 +27,33 @@ class Cell(CellBase):
     
     def get_all_adjacent(self):
         return [self.get_adjacent(dir) for dir in self.DIRECTIONS]
+
+    def get_direction_toward(self, other):
+        """
+        Get a direction to travel to
+        get to the other cell specified.
+        
+        This implementation has a slight tendency
+        to move vertically rather than horizontally
+        """
+        
+        #If we are at the destination cell, we do not 
+        #have to go in any direction
+        if self == other:
+            return None
+        
+        #Get the displacement to reach the other cell
+        row_delta = other.row - self.row
+        col_delta = other.col - self.col
+        
+        #Get the absolute value of the deltas
+        a_row_delta = abs(row_delta)
+        a_col_delta = abs(col_delta)
+        
+        if a_row_delta >= a_col_delta:
+            return "south" if row_delta >= 0 else "north"
+        else:
+            return "east" if col_delta >= 0 else "west"
     
     def __eq__(self, other):
         return self.row == other.row and self.col == other.col
