@@ -8,11 +8,19 @@ class SketchMode(object):
     between multiple modes of the same Processing sketch
     without needing multiple sketches.
     """
+    
+    def update(self):
+        """
+        Code to update the state of the sketch. Called
+        just before draw()
+        """
+        pass
+    
     def draw(self):
         """
         Code for drawing a frame of the sketch mode
         """
-        raise NotImplementedError
+        pass
     
     def keyPressed(self):
         """
