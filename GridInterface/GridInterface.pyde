@@ -2,13 +2,13 @@ from basic import Cell, Grid
 from bots import Bot, AutoBot
 from example1 import Example1
 from example2 import Example2
-from hexample1 import Hexample1
+from hexample1 import Hexample1A, Hexample1B
 
 #Keep track of the Ctrl key.
 #Ctrl + Left/Right switches between sketches
 control_pressed = False
 
-MODES = [Example1, Example2, Hexample1]
+MODES = [Example1, Example2, Hexample1A, Hexample1B]
 mode_index = 0
 
 

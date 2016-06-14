@@ -18,7 +18,7 @@ class HexCell(CellBase):
     DIRECTIONS = {
         'xz': (0, 1),
         'zx': (1, 0),
-        'zy': (-1, -1),
+        'zy': (1, -1),
         'yz': (0, -1),
         'yx': (-1, 0),
         'xy': (-1, 1)
@@ -182,13 +182,19 @@ class HexGrid(GridBase):
         for x, y in self.hex_points():
             vertex(cx + x, cy + y)
         endShape(CLOSE)
+    
+    @property
+    def basis_vectors(self):
+        row_basis = self.BASIS_VECTORS[self.top]['row']
+        col_basis = self.BASIS_VECTORS[self.top]['col']
+        return row_basis, col_basis
+    
 
     def draw(self):
         stroke(255)
         noFill()
         
-        row_basis = self.BASIS_VECTORS[self.top]['row']
-        col_basis = self.BASIS_VECTORS[self.top]['col']
+        row_basis, col_basis = self.basis_vectors
         for row in xrange(self.rows):
             for col in xrange(self.cols):
                 center = row * row_basis + col * col_basis
