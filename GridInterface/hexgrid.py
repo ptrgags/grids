@@ -1,4 +1,5 @@
 from base import CellBase, GridBase
+from basic import Grid
 
 class HexCell(CellBase):
     """
@@ -7,16 +8,36 @@ class HexCell(CellBase):
     but cells have properties for getting
     cube coordinates
     """
-    #6 directions for each hexagon.
-    #These directions are labeled similar
-    #to NNW (North by Northwest), for example
-    #'xy' is the direction that goes towards the
-    #positive x-axis but angled slightly towards y
-    #whereas 'xz' is towards thex-axis and slightly
-    #towards z
-    #The reason why I do this is so directions
-    #are invariant between flat/pointy topped hexagon
-    #grids
+    
+    """
+    6 directions for each hexagon.
+    These directions are labeled similar
+    to NNW (North by Northwest), for example
+    'xy' is the direction that goes towards the
+    positive x-axis but angled slightly towards y
+    whereas 'xz' is towards thex-axis and slightly
+    towards z
+    
+    ASCII Art 
+  
+       +y   yx
+         \  __
+      yz __/  \__ 
+        /  \__/  \ xy
+        \__/  \__/ --> +x
+        /  \__/  \
+        \__/  \__/  xz
+      zy   \__/
+         /
+        +z  zx
+    
+    
+    The reason why I do this is so directions
+    are invariant between flat/pointy topped hexagon
+    grids. Rotate the above grid 30 degrees
+    counterclockwise so the hexagons have points at the top
+    and the labels are exactly the same
+    """
     DIRECTIONS = {
         'xz': (0, 1),
         'zx': (1, 0),
@@ -93,10 +114,7 @@ class HexCell(CellBase):
     def __repr__(self):
         return "cell({}, {})".format(self.row, self.col)
 
-#TODO: This could extend the basic rectangular grid
-#since most of the code is identical. Then we can extend it to
-#support other shapes of grid
-class HexGrid(GridBase):
+class HexGrid(Grid):
     """
     A hexagonal grid in the shape of a parallelogram
     """
@@ -122,7 +140,6 @@ class HexGrid(GridBase):
         }
     }
     
-    
     def __init__(self, rows, cols, top):
         """
         Create the grid
@@ -140,38 +157,12 @@ class HexGrid(GridBase):
         #TODO: top is for display purposes only
         self.top = top
     
-    def is_valid(self, cell):
-        return 0 <= cell.row < self.rows and 0 <= cell.col < self.cols
-
-    def put(self, cell, obj):
-        if not self.is_valid(cell):
-            raise ValueError(
-                "Can't put {} in grid at {}, cell out of bounds!".format(
-                    obj, cell))
-        clobbered = self.get(cell)
-        self.grid[cell.row][cell.col] = obj
-        return clobbered
-    
-    def remove(self, cell):
-        old = self.get(cell)
-        self.grid[cell.row][cell.col] = None
-        return old
-    
-    def get(self, cell):
-        if not self.is_valid(cell):
-            raise ValueError(
-                "Can't get object at {}, cell out of bounds!".format(cell))
-        return self.grid[cell.row][cell.col]
-    
     def occupied_cells(self):
         return [
             HexCell(row, col)
             for row in xrange(self.rows)
             for col in xrange(self.cols)
             if self.grid[row][col] is not None]
-
-    def __str__(self):
-        return "\n".join(str(row) for row in self.grid)
     
     def __repr__(self):
         return "HexGrid({}, {})".format(self.rows, self.cols)

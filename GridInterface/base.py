@@ -199,4 +199,4 @@ class EntityBase(object):
         raise NotImplementedError
         
     def __repr__(self):
-        return "Entity({}, {})".format(repr(self.grid), self.cell)
+        return "Entity({})".format(self.cell)

@@ -62,7 +62,7 @@ class Cell(CellBase):
         return "({}, {})".format(self.row, self.col)
 
     def __repr__(self):
-        return "cell({}, {})".format(self.row, self.col)
+        return "Cell({}, {})".format(self.row, self.col)
 
 class Grid(GridBase):
     """
