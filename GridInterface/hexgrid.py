@@ -1,6 +1,11 @@
 from base import CellBase, GridBase
 from basic import Grid
 
+from hexgraphics import draw_hex, hex_basis_vectors
+
+
+# Hex Grid Cell ==================================
+
 class HexCell(CellBase):
     """
     Hexagonal cell. The cell is stored
@@ -114,31 +119,13 @@ class HexCell(CellBase):
     def __repr__(self):
         return "cell({}, {})".format(self.row, self.col)
 
+
+# Hex Grid (Parallelogram) =================================
+
 class HexGrid(Grid):
     """
     A hexagonal grid in the shape of a parallelogram
     """
-    
-    #TODO: move drawing stuff outside class
-    #Width, height of a pointy topped hexagon with 
-    #radius (center to vertex) 1
-    WIDTH_POINTY = sqrt(3)
-    HEIGHT_POINTY = 2.0
-    #Width, height of a flat-topped hexagon with radius
-    #(center to vertex)1
-    WIDTH_FLAT = 2.0
-    HEIGHT_FLAT = sqrt(3)
-     
-    BASIS_VECTORS = {
-        'pointy': {
-            'row': PVector(WIDTH_POINTY / 2, HEIGHT_POINTY * 3 / 4),
-            'col': PVector(WIDTH_POINTY, 0)
-        },
-        'flat': {
-            'row': PVector(0, HEIGHT_FLAT),
-            'col': PVector(WIDTH_FLAT * 3 / 4, HEIGHT_FLAT / 2)
-        }
-    }
     
     def __init__(self, rows, cols, top):
         """
@@ -166,42 +153,14 @@ class HexGrid(Grid):
     
     def __repr__(self):
         return "HexGrid({}, {})".format(self.rows, self.cols)
-
-    #TODO: This should just be a utility function elsewhere
-    def to_rect(self, radius, angle, flip_y = True):
-        x = radius * cos(angle)
-        y = -1 if flip_y else 1
-        y *= radius * sin(angle)
-        return x, y
-
-    #TODO: Move this to a class for drawing grids
-    def hex_points(self):
-        angle_offset = 0 if self.top == 'flat' else PI / 6
-        for i in xrange(6):
-            angle = THIRD_PI * i + angle_offset
-            yield self.to_rect(1, angle)
-
-    #TODO: Move this to a class for drawing grids
-    def draw_hex(self, cx, cy):
-        beginShape()
-        for x, y in self.hex_points():
-            vertex(cx + x, cy + y)
-        endShape(CLOSE)
-    
-    #TODO: This is for graphics only
-    @property
-    def basis_vectors(self):
-        row_basis = self.BASIS_VECTORS[self.top]['row']
-        col_basis = self.BASIS_VECTORS[self.top]['col']
-        return row_basis, col_basis
     
     #TODO: This is for graphics only
     def draw(self):
         stroke(255)
         noFill()
         
-        row_basis, col_basis = self.basis_vectors
+        row_basis, col_basis = hex_basis_vectors(self.top)
         for row in xrange(self.rows):
             for col in xrange(self.cols):
                 center = row * row_basis + col * col_basis
-                self.draw_hex(center.x, center.y)
+                draw_hex(center.x, center.y, self.top)

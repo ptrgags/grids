@@ -1,4 +1,5 @@
 from base import EntityBase
+from hexgraphics import hex_basis_vectors
 
 class HexBot(EntityBase):
     """
@@ -19,7 +20,7 @@ class HexBot(EntityBase):
         stroke(255)
         fill(self.color)
         
-        row_basis, col_basis = self.grid.basis_vectors
+        row_basis, col_basis = hex_basis_vectors(self.grid.top)
         
         pos = row * row_basis + col * col_basis
         
