@@ -100,7 +100,7 @@ class Grid(GridBase):
     
     def occupied_cells(self):
         return [
-            cell(row, col)
+            Cell(row, col)
             for row in xrange(self.rows)
             for col in xrange(self.cols)
             if self.grid[row][col] is not None]
@@ -111,6 +111,7 @@ class Grid(GridBase):
     def __repr__(self):
         return "Grid({}, {})".format(self.rows, self.cols)
 
+    #TODO: This is graphics-only
     def draw(self):
         stroke(255)
         noFill()

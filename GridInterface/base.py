@@ -33,7 +33,6 @@ class CellBase(object):
         """
         raise NotImplementedError
     
-    #TODO: Get direction toward cell?
     #TODO: Compare cells?
 
 class GridBase(object):
@@ -131,6 +130,7 @@ class GridBase(object):
                 neighbor_list.append(obj)
         return neighbor_list
 
+    #TODO: Move this to some sort of graphics class
     def draw(self):
         """
         Draw the grid lines for this grid

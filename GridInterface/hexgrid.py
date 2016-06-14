@@ -7,7 +7,6 @@ class HexCell(CellBase):
     but cells have properties for getting
     cube coordinates
     """
-    
     #6 directions for each hexagon.
     #These directions are labeled similar
     #to NNW (North by Northwest), for example
@@ -15,6 +14,9 @@ class HexCell(CellBase):
     #positive x-axis but angled slightly towards y
     #whereas 'xz' is towards thex-axis and slightly
     #towards z
+    #The reason why I do this is so directions
+    #are invariant between flat/pointy topped hexagon
+    #grids
     DIRECTIONS = {
         'xz': (0, 1),
         'zx': (1, 0),
@@ -91,10 +93,15 @@ class HexCell(CellBase):
     def __repr__(self):
         return "cell({}, {})".format(self.row, self.col)
 
+#TODO: This could extend the basic rectangular grid
+#since most of the code is identical. Then we can extend it to
+#support other shapes of grid
 class HexGrid(GridBase):
     """
     A hexagonal grid in the shape of a parallelogram
     """
+    
+    #TODO: move drawing stuff outside class
     #Width, height of a pointy topped hexagon with 
     #radius (center to vertex) 1
     WIDTH_POINTY = sqrt(3)
@@ -114,6 +121,8 @@ class HexGrid(GridBase):
             'col': PVector(WIDTH_FLAT * 3 / 4, HEIGHT_FLAT / 2)
         }
     }
+    
+    
     def __init__(self, rows, cols, top):
         """
         Create the grid
@@ -127,6 +136,8 @@ class HexGrid(GridBase):
         self.grid = [
             [None for col in xrange(cols)]
             for row in xrange(rows)]
+        
+        #TODO: top is for display purposes only
         self.top = top
     
     def is_valid(self, cell):
@@ -154,7 +165,7 @@ class HexGrid(GridBase):
     
     def occupied_cells(self):
         return [
-            cell(row, col)
+            HexCell(row, col)
             for row in xrange(self.rows)
             for col in xrange(self.cols)
             if self.grid[row][col] is not None]
@@ -163,33 +174,37 @@ class HexGrid(GridBase):
         return "\n".join(str(row) for row in self.grid)
     
     def __repr__(self):
-        return "Grid({}, {})".format(self.rows, self.cols)
+        return "HexGrid({}, {})".format(self.rows, self.cols)
 
+    #TODO: This should just be a utility function elsewhere
     def to_rect(self, radius, angle, flip_y = True):
         x = radius * cos(angle)
         y = -1 if flip_y else 1
         y *= radius * sin(angle)
         return x, y
 
+    #TODO: Move this to a class for drawing grids
     def hex_points(self):
         angle_offset = 0 if self.top == 'flat' else PI / 6
         for i in xrange(6):
             angle = THIRD_PI * i + angle_offset
             yield self.to_rect(1, angle)
 
+    #TODO: Move this to a class for drawing grids
     def draw_hex(self, cx, cy):
         beginShape()
         for x, y in self.hex_points():
             vertex(cx + x, cy + y)
         endShape(CLOSE)
     
+    #TODO: This is for graphics only
     @property
     def basis_vectors(self):
         row_basis = self.BASIS_VECTORS[self.top]['row']
         col_basis = self.BASIS_VECTORS[self.top]['col']
         return row_basis, col_basis
     
-
+    #TODO: This is for graphics only
     def draw(self):
         stroke(255)
         noFill()

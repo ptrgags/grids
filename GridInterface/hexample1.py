@@ -1,5 +1,5 @@
 from SketchMode import SketchMode
-from hex import HexCell, HexGrid
+from hexgrid import HexCell, HexGrid
 from hexbots import HexBot
 
 class Hexample1A(SketchMode):
