@@ -164,3 +164,53 @@ class HexGrid(Grid):
             for col in xrange(self.cols):
                 center = row * row_basis + col * col_basis
                 draw_hex(center.x, center.y, self.top)
+
+class HexagonHexGrid(HexGrid):
+    """
+    A hexagonal grid in the shape of a hexagon
+    """
+    def __init__(self, radius, top):
+        """
+        Constructor
+        :param int radius: - the radius of the hexagon grid
+            from center to side, including the center.
+        :param str top: - "pointy" or "flat" for the part of
+            the hexagonal cells that is at the top
+        """
+        #Radius -> min grid size needed
+        # 1 -> 1x1
+        # 2 -> 3x3
+        # 3 -> 5x5
+        # r -> (2r - 1) x (2r - 1)
+        grid_size = 2 * radius - 1
+        super(HexagonHexGrid, self).__init__(grid_size, grid_size, top)
+        self.radius = radius
+        
+        #This is used for determining which cells in the grid
+        #actually belong in the hexagon layout
+        #Radius -> Center cell coordinates
+        # 1 -> (0, 0)
+        # 2 -> (1, 1)
+        # 3 -> (2, 2)
+        # r -> (r - 1, r - 1)
+        self._center_cell = HexCell(radius - 1, radius - 1)
+    
+    def is_valid(self, cell):
+        is_in_grid = super(HexagonHexGrid, self).is_valid(cell)
+        if not is_in_grid:
+            return False
+    
+        return abs(cell.y - self._center_cell.y) < self.radius
+
+    #TODO: This is for graphics only
+    def draw(self):
+        stroke(255)
+        noFill()
+        
+        #First, we need to translate the origin to the center of the screen
+        row_basis, col_basis = hex_basis_vectors(self.top)
+        for row in xrange(self.rows):
+            for col in xrange(self.cols):
+                if self.is_valid(HexCell(row, col)):
+                    center = row * row_basis + col * col_basis
+                    draw_hex(center.x, center.y, self.top)
